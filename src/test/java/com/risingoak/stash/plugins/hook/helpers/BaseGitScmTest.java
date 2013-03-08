@@ -6,15 +6,12 @@ import com.atlassian.stash.scm.git.GitCommandBuilderFactory;
 import com.atlassian.stash.scm.git.GitScm;
 import com.atlassian.stash.scm.git.GitScmCommandBuilder;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class BaseGitScmTest {
     @Mock protected GitScm gitScm;
     @Mock protected Repository repository;

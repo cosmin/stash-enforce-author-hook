@@ -16,16 +16,16 @@
     <component-import key="gitScm" interface="com.atlassian.stash.scm.git.GitScm" />
     <component-import key="stashAuthenticationContext" interface="com.atlassian.stash.user.StashAuthenticationContext" />
 
-    <component key="rejectedResponsePrinter" interface="com.risingoak.stash.plugins.hook.RejectedResponsePrinter">
-        <class>com.risingoak.stash.plugins.hook.internal.RejectedResponsePrinterImpl</class>
+    <component key="rejectedResponsePrinter" class="com.risingoak.stash.plugins.hook.internal.RejectedResponsePrinterImpl">
+        <interface>com.risingoak.stash.plugins.hook.RejectedResponsePrinter</interface>
     </component>
 
-    <component key="revListService" interface="com.risingoak.stash.plugins.hook.RevListService">
-        <class>com.risingoak.stash.plugins.hook.internal.RevListServiceImpl</class>
+    <component key="revListService" class="com.risingoak.stash.plugins.hook.internal.RevListServiceImpl">
+        <interface>com.risingoak.stash.plugins.hook.RevListService</interface>
     </component>
 
-    <component key="refService" interface="com.risingoak.stash.plugins.hook.RefService">
-        <class>com.risingoak.stash.plugins.hook.internal.RefServiceImpl</class>
+    <component key="refService" class="com.risingoak.stash.plugins.hook.internal.RefServiceImpl">
+        <interface>com.risingoak.stash.plugins.hook.RefService</interface>
     </component>
 
 
