@@ -18,6 +18,12 @@
     <description>Stash hook to prevent users from pushing commits they have not authored</description>
     <packaging>atlassian-plugin</packaging>
 
+    <scm>
+        <connection>git@github.com:RisingOak/stash-enforce-author-hook.git</connection>
+        <developerConnection>git@github.com:RisingOak/stash-enforce-author-hook.git</developerConnection>
+        <url>https://github.com/RisingOak/stash-enforce-author-hook</url>
+    </scm>
+
     <licenses>
       <license>
         <name>The Apache Software License, Version 2.0</name>
