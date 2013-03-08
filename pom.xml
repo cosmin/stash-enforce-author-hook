@@ -19,8 +19,8 @@
     <packaging>atlassian-plugin</packaging>
 
     <scm>
-        <connection>git@github.com:RisingOak/stash-enforce-author-hook.git</connection>
-        <developerConnection>git@github.com:RisingOak/stash-enforce-author-hook.git</developerConnection>
+        <connection>scm:git:git@github.com:RisingOak/stash-enforce-author-hook.git</connection>
+        <developerConnection>scm:git:git@github.com:RisingOak/stash-enforce-author-hook.git</developerConnection>
         <url>https://github.com/RisingOak/stash-enforce-author-hook</url>
     </scm>
 
