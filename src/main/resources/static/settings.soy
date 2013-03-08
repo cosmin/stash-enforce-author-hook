@@ -20,8 +20,8 @@
     {/call}
     {call widget.aui.form.checkbox}
             {param id: 'allowUsernameAt' /}
-            {param checked: $config['enforceEmail'] /}
-            {param labelHtml: stash_i18n('com.risingoak.stash.plugins.hook.enforce.settings.allowUsernameAt.label', 'Allow &lt;username&gt;@ email address (in addition to directory value)') /}
+            {param checked: $config['allowUsernameAt'] /}
+            {param labelHtml: stash_i18n('com.risingoak.stash.plugins.hook.enforce.settings.allowUsernameAt.label', 'Allow alternate email (&lt;username&gt;@)') /}
             {param errorTexts: $errors ? $errors['allowUsernameAt'] : null /}
     {/call}
 {/template}

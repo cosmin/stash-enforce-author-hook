@@ -1,6 +1,7 @@
 package com.risingoak.stash.plugins.hook.internal;
 
 import com.atlassian.stash.hook.HookResponse;
+import com.atlassian.stash.setting.Settings;
 import com.atlassian.stash.user.Person;
 import com.atlassian.stash.user.StashUser;
 import com.risingoak.stash.plugins.hook.RejectedResponsePrinter;
@@ -12,10 +13,12 @@ public class RejectedResponsePrinterImpl implements RejectedResponsePrinter {
     }
 
     @Override
-    public void printRejectedMessage(StashUser currentUser, HookResponse hookResponse, Map<String, Person> rejectedRevs) {
+    public void printRejectedMessage(StashUser currentUser, HookResponse hookResponse, Map<String, Person> rejectedRevs, Settings settings) {
         hookResponse.err().println();
+        SettingsWrapper settingsWrapper = new SettingsWrapper(settings);
+
         printBanner(hookResponse);
-        printPushingAsInfo(currentUser, hookResponse);
+        printPushingAsInfo(currentUser, hookResponse, settingsWrapper);
         printCommitListHeader(hookResponse);
         for (String refId : rejectedRevs.keySet()) {
             Person author = rejectedRevs.get(refId);
@@ -30,13 +33,25 @@ public class RejectedResponsePrinterImpl implements RejectedResponsePrinter {
         hookResponse.err().println("-----------------------------------------------------");
     }
 
-    void printPushingAsInfo(StashUser currentUser, HookResponse hookResponse) {
-        hookResponse.err().format("Pushing as: %s <%s>\n", currentUser.getDisplayName(), currentUser.getEmailAddress());
+    void printPushingAsInfo(StashUser currentUser, HookResponse hookResponse, SettingsWrapper settingsWrapper) {
+        if (settingsWrapper.isEnforceName()) {
+            hookResponse.err().format("  required name: %s\n", currentUser.getDisplayName());
+        }
+        if (settingsWrapper.isEnforceEmail()) {
+            hookResponse.err().format(" required email: %s\n", currentUser.getEmailAddress());
+        }
+        if (settingsWrapper.isAllowUsernameAt()) {
+            String alternativeAddress = settingsWrapper.getAlternativeAddress(currentUser);
+            if (!currentUser.getEmailAddress().equalsIgnoreCase(alternativeAddress)) {
+                hookResponse.err().format("alternate email: %s\n", alternativeAddress);
+            }
+        }
+        hookResponse.err().println();
     }
 
 
     void printCommitListHeader(HookResponse hookResponse) {
-        hookResponse.err().println("The following commits do not match your current information:");
+        hookResponse.err().println("The following commits do not match:");
         hookResponse.err().println();
     }
 

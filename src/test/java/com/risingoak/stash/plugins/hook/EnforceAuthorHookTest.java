@@ -25,20 +25,14 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EnforceAuthorHookTest extends BaseGitScmTest {
-    @Mock
-    HistoryService historyService;
-    @Mock
-    StashAuthenticationContext stashAuthenticationContext;
-    @Mock
-    RefService refService;
-    @Mock
-    RevListService revListService;
-    @Mock
-    RejectedResponsePrinter rejectedResponsePrinter;
-    @Mock
-    StashUser stashUser;
-    @Mock
-    HookResponse hookResponse;
+    @Mock HistoryService historyService;
+    @Mock StashAuthenticationContext stashAuthenticationContext;
+    @Mock RefService refService;
+    @Mock RevListService revListService;
+    @Mock RejectedResponsePrinter rejectedResponsePrinter;
+    @Mock StashUser stashUser;
+    @Mock HookResponse hookResponse;
+    @Mock Settings settings;
     private EnforceAuthorHook hook;
 
 
@@ -80,14 +74,14 @@ public class EnforceAuthorHookTest extends BaseGitScmTest {
 
     @Test
     public void shouldPassIfNoRejections() throws Exception {
-        assertTrue(hook.handleRejections(hookResponse, new HashMap<String, Person>(), stashUser));
+        assertTrue(hook.handleRejections(hookResponse, new HashMap<String, Person>(), stashUser, settings));
     }
 
     @Test
     public void shouldReturnFalseIfThereAreRejections() throws Exception {
         HashMap<String, Person> rejectedRevs = new HashMap<String, Person>();
         rejectedRevs.put("123", mock(Person.class));
-        assertFalse(hook.handleRejections(hookResponse, rejectedRevs, stashUser));
+        assertFalse(hook.handleRejections(hookResponse, rejectedRevs, stashUser, settings));
     }
 
     @Test
@@ -95,9 +89,9 @@ public class EnforceAuthorHookTest extends BaseGitScmTest {
         HashMap<String, Person> rejectedRevs = new HashMap<String, Person>();
         rejectedRevs.put("123", mock(Person.class));
 
-        hook.handleRejections(hookResponse, rejectedRevs, stashUser);
+        hook.handleRejections(hookResponse, rejectedRevs, stashUser, settings);
 
-        verify(rejectedResponsePrinter).printRejectedMessage(stashUser, hookResponse, rejectedRevs);
+        verify(rejectedResponsePrinter).printRejectedMessage(stashUser, hookResponse, rejectedRevs, settings);
     }
 
     @Test
@@ -119,9 +113,36 @@ public class EnforceAuthorHookTest extends BaseGitScmTest {
     }
 
     @Test
-    public void shouldEnforceNameIfRequire() throws Exception {
+    public void shouldRejectIfNameDoesNotMatchButNameEnforcementRequired() throws Exception {
         Settings settings = getSettingsWith(true, true, false);
         Person author = getAuthorWithNameAndEmail("John Doe", "jdoe@example.com");
+        StashUser pusher = getCurrentUserWithIdNameAndEmail("1234", "John L. Doe", "jdoe@example.com");
+
+        assertFalse(hook.hasValidAuthor(settings, author, pusher));
+    }
+
+    @Test
+    public void shouldAllowIfNameMatches() throws Exception {
+        Settings settings = getSettingsWith(true, true, false);
+        Person author = getAuthorWithNameAndEmail("John Doe", "jdoe@example.com");
+        StashUser pusher = getCurrentUserWithIdNameAndEmail("1234", "John Doe", "jdoe@example.com");
+
+        assertTrue(hook.hasValidAuthor(settings, author, pusher));
+    }
+
+    @Test
+    public void shouldAllowUsernameAtEmailIfSPecified() throws Exception {
+        Settings settings = getSettingsWith(true, false, true);
+        Person author = getAuthorWithNameAndEmail("John Doe", "1234@example.com");
+        StashUser pusher = getCurrentUserWithIdNameAndEmail("1234", "John L. Doe", "jdoe@example.com");
+
+        assertTrue(hook.hasValidAuthor(settings, author, pusher));
+    }
+
+    @Test
+    public void shouldFailIfNeitherEmailAddressMatches() throws Exception {
+        Settings settings = getSettingsWith(true, false, true);
+        Person author = getAuthorWithNameAndEmail("John Doe", "bar@example.com");
         StashUser pusher = getCurrentUserWithIdNameAndEmail("1234", "John L. Doe", "jdoe@example.com");
 
         assertFalse(hook.hasValidAuthor(settings, author, pusher));

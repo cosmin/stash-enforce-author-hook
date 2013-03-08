@@ -12,6 +12,7 @@ import com.atlassian.stash.setting.Settings;
 import com.atlassian.stash.user.Person;
 import com.atlassian.stash.user.StashAuthenticationContext;
 import com.atlassian.stash.user.StashUser;
+import com.risingoak.stash.plugins.hook.internal.SettingsWrapper;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -52,12 +53,12 @@ public class EnforceAuthorHook implements PreReceiveRepositoryHook {
             }
         }
 
-        return handleRejections(hookResponse, rejectedRevs, currentUser);
+        return handleRejections(hookResponse, rejectedRevs, currentUser, context.getSettings());
     }
 
-    boolean handleRejections(HookResponse hookResponse, Map<String, Person> rejectedRevs, StashUser currentUser) {
+    boolean handleRejections(HookResponse hookResponse, Map<String, Person> rejectedRevs, StashUser currentUser, Settings settings) {
         if (!rejectedRevs.isEmpty()) {
-            rejectedResponsePrinter.printRejectedMessage(currentUser, hookResponse, rejectedRevs);
+            rejectedResponsePrinter.printRejectedMessage(currentUser, hookResponse, rejectedRevs, settings);
             return false;
         } else {
             return true;
@@ -65,20 +66,33 @@ public class EnforceAuthorHook implements PreReceiveRepositoryHook {
     }
 
     boolean hasValidAuthor(Settings settings, Person author, StashUser currentUser) {
-        Boolean allowUsernameAt = settings.getBoolean("allowUsernameAt");
-        Boolean enforceEmail = settings.getBoolean("enforceEmail") || true;
-        Boolean enforceName = settings.getBoolean("enforceName");
+        SettingsWrapper settingsWrapper = new SettingsWrapper(settings);
 
         boolean valid = true;
-        if (enforceEmail) {
-            valid = valid && author.getEmailAddress().equalsIgnoreCase(currentUser.getEmailAddress());
+
+        if (settingsWrapper.isEnforceEmail()) {
+            List<String> allowedEmails = settingsWrapper.getAllowedEmailAddresses(currentUser);
+            valid = valid && validateEmailMatchesOneOf(author, allowedEmails);
         }
-        if (enforceName) {
-            valid = valid && author.getName().equalsIgnoreCase(currentUser.getName());
+        if (settingsWrapper.isEnforceName()) {
+            valid = valid && author.getName().equalsIgnoreCase(currentUser.getDisplayName());
         }
 
         return valid;
     }
+
+    private boolean validateEmailMatchesOneOf(Person author, List<String> allowedEmails) {
+        boolean emailMatch = false;
+        for (String email : allowedEmails) {
+            if (author.getEmailAddress().equalsIgnoreCase(email)) {
+                emailMatch = true;
+                break;
+            }
+        }
+        return emailMatch;
+    }
+
+
 
     List<String> getPushedRefs(Collection<RefChange> refChanges) {
         List<String> toList = new ArrayList<String>();
