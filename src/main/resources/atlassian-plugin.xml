@@ -16,6 +16,18 @@
     <component-import key="gitScm" interface="com.atlassian.stash.scm.git.GitScm" />
     <component-import key="stashAuthenticationContext" interface="com.atlassian.stash.user.StashAuthenticationContext" />
 
+    <component key="rejectedResponsePrinter" interface="com.risingoak.stash.plugins.hook.RejectedResponsePrinter">
+        <class>com.risingoak.stash.plugins.hook.internal.RejectedResponsePrinterImpl</class>
+    </component>
+
+    <component key="revListService" interface="com.risingoak.stash.plugins.hook.RevListService">
+        <class>com.risingoak.stash.plugins.hook.internal.RevListServiceImpl</class>
+    </component>
+
+    <component key="refService" interface="com.risingoak.stash.plugins.hook.RefService">
+        <class>com.risingoak.stash.plugins.hook.internal.RefServiceImpl</class>
+    </component>
+
 
     <repository-hook key="enforceAuthorHook" name="Enforce Push Author" class="com.risingoak.stash.plugins.hook.EnforceAuthorHook">
         <description>Prevent users from pushing commits they have not authored.</description>
