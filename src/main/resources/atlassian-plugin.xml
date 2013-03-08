@@ -2,7 +2,7 @@
     <plugin-info>
         <description>Hook to prevent users from pushing commits they have not authored.</description>
         <version>${project.version}</version>
-        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
         <param name="plugin-icon">images/enforceAuthorIcon.png</param>
         <param name="plugin-logo">images/enforceAuthorLogo.png</param>
     </plugin-info>
@@ -11,12 +11,16 @@
     <resource type="i18n" name="i18n" location="stash-enforce-author-hook"/>
 
     <!-- import from the product container -->
-    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
-    <component-import key="repositoryMetadataService" interface="com.atlassian.stash.repository.RepositoryMetadataService" />
-    <component-import key="gitScm" interface="com.atlassian.stash.scm.git.GitScm" />
-    <component-import key="stashAuthenticationContext" interface="com.atlassian.stash.user.StashAuthenticationContext" />
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+    <component-import key="repositoryMetadataService"
+                      interface="com.atlassian.stash.repository.RepositoryMetadataService"/>
+    <component-import key="gitScm" interface="com.atlassian.stash.scm.git.GitScm"/>
+    <component-import key="i18nService" interface="com.atlassian.stash.i18n.I18nService"/>
+    <component-import key="soyTemplateRenderer" interface="com.atlassian.soy.renderer.SoyTemplateRenderer"/>
+    <component-import key="stashAuthenticationContext" interface="com.atlassian.stash.user.StashAuthenticationContext"/>
 
-    <component key="rejectedResponsePrinter" class="com.risingoak.stash.plugins.hook.internal.RejectedResponsePrinterImpl">
+    <component key="rejectedResponsePrinter"
+               class="com.risingoak.stash.plugins.hook.internal.RejectedResponsePrinterImpl">
         <interface>com.risingoak.stash.plugins.hook.RejectedResponsePrinter</interface>
     </component>
 
@@ -29,21 +33,22 @@
     </component>
 
 
-    <repository-hook key="enforceAuthorHook" name="Enforce Push Author" class="com.risingoak.stash.plugins.hook.EnforceAuthorHook">
+    <repository-hook key="enforceAuthorHook" name="Enforce Push Author"
+                     class="com.risingoak.stash.plugins.hook.EnforceAuthorHook">
         <description>Prevent users from pushing commits they have not authored.</description>
         <icon>images/enforceAuthorLogo.png</icon>
-        <!--<config-form name="Ref Hook Config" key="refHook-config">-->
-            <!--<view>com.atlassian.stash.repository.hook.ref.formContents</view>-->
-            <!--<directory location="/static/"/>-->
-        <!--</config-form>-->
-        <!--&lt;!&ndash; Validators can be declared separately &ndash;&gt;-->
+        <config-form name="Enforce Author Hook Config" key="enforceAuthorHook-config">
+            <view>com.risingoak.stash.plugins.hook.enforce.settings.formContents</view>
+            <directory location="/static/"/>
+        </config-form>
+        <!-- Validators can be declared separately -->
         <!--<validator>com.atlassian.stash.repository.hook.ref.RefValidator</validator>-->
     </repository-hook>
 
     <!-- add our web resources -->
-    <web-resource key="stash-enforce-author-hook-resources" name="stash-enforce-author-hook Web Resources">
+    <web-resource key="com.risingoak.stash.plugins.hook.enforce-author-hook" name="Enforce Author Hook Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        
+
         <resource type="download" name="stash-enforce-author-hook.css" location="/css/stash-enforce-author-hook.css"/>
         <resource type="download" name="stash-enforce-author-hook.js" location="/js/stash-enforce-author-hook.js"/>
         <resource type="download" name="images/" location="/images"/>

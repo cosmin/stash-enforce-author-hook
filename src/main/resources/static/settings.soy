@@ -1,0 +1,27 @@
+{namespace com.risingoak.stash.plugins.hook.enforce.settings}
+
+/**
+ * @param config
+ * @param? errors
+ */
+{template .formContents}
+    {call widget.aui.form.checkbox}
+            {param id: 'enforceEmail' /}
+            {param checked: true /}
+            {param disabled: true /}
+            {param labelHtml: stash_i18n('com.risingoak.stash.plugins.hook.enforce.settings.enforceEmail.label', 'Require matching email address (required)') /}
+            {param errorTexts: $errors ? $errors['enforceEmail'] : null /}
+    {/call}
+    {call widget.aui.form.checkbox}
+            {param id: 'enforceName' /}
+            {param checked: $config['enforceName'] /}
+            {param labelHtml: stash_i18n('com.risingoak.stash.plugins.hook.enforce.settings.enforceName.label', 'Require matching display name') /}
+            {param errorTexts: $errors ? $errors['enforceName'] : null /}
+    {/call}
+    {call widget.aui.form.checkbox}
+            {param id: 'allowUsernameAt' /}
+            {param checked: $config['enforceEmail'] /}
+            {param labelHtml: stash_i18n('com.risingoak.stash.plugins.hook.enforce.settings.allowUsernameAt.label', 'Allow &lt;username&gt;@ email address (in addition to directory value)') /}
+            {param errorTexts: $errors ? $errors['allowUsernameAt'] : null /}
+    {/call}
+{/template}
