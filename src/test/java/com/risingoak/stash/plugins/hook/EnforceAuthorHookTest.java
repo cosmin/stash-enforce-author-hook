@@ -4,6 +4,7 @@ import com.atlassian.stash.history.HistoryService;
 import com.atlassian.stash.hook.HookResponse;
 import com.atlassian.stash.repository.RefChange;
 import com.atlassian.stash.repository.RefChangeType;
+import com.atlassian.stash.setting.Settings;
 import com.atlassian.stash.user.Person;
 import com.atlassian.stash.user.StashAuthenticationContext;
 import com.atlassian.stash.user.StashUser;
@@ -15,16 +16,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EnforceAuthorHookTest extends BaseGitScmTest {
@@ -101,6 +98,56 @@ public class EnforceAuthorHookTest extends BaseGitScmTest {
         hook.handleRejections(hookResponse, rejectedRevs, stashUser);
 
         verify(rejectedResponsePrinter).printRejectedMessage(stashUser, hookResponse, rejectedRevs);
+    }
+
+    @Test
+    public void shouldAllowCommitWhenEmailAddressMatches() throws Exception {
+        Settings settings = getSettingsWith(true, false, false);
+        Person author = getAuthorWithNameAndEmail("John Doe", "jdoe@example.com");
+        StashUser pusher = getCurrentUserWithIdNameAndEmail("1234", "John L. Doe", "jdoe@example.com");
+
+        assertTrue(hook.hasValidAuthor(settings, author, pusher));
+    }
+
+    @Test
+    public void shouldPreventCommitWhenEmailAddressDoesNotMatch() throws Exception {
+        Settings settings = getSettingsWith(true, false, false);
+        Person author = getAuthorWithNameAndEmail("John Doe", "jdoe@example.com");
+        StashUser pusher = getCurrentUserWithIdNameAndEmail("1234", "John L. Doe", "jdoe@bar.com");
+
+        assertFalse(hook.hasValidAuthor(settings, author, pusher));
+    }
+
+    @Test
+    public void shouldEnforceNameIfRequire() throws Exception {
+        Settings settings = getSettingsWith(true, true, false);
+        Person author = getAuthorWithNameAndEmail("John Doe", "jdoe@example.com");
+        StashUser pusher = getCurrentUserWithIdNameAndEmail("1234", "John L. Doe", "jdoe@example.com");
+
+        assertFalse(hook.hasValidAuthor(settings, author, pusher));
+    }
+
+    private StashUser getCurrentUserWithIdNameAndEmail(String id, String name, String email) {
+        StashUser stashUser = mock(StashUser.class);
+        when(stashUser.getName()).thenReturn(id);
+        when(stashUser.getDisplayName()).thenReturn(name);
+        when(stashUser.getEmailAddress()).thenReturn(email);
+        return stashUser;
+    }
+
+    private Person getAuthorWithNameAndEmail(String name, String email) {
+        Person author = mock(Person.class);
+        when(author.getEmailAddress()).thenReturn(email);
+        when(author.getName()).thenReturn(name);
+        return author;
+    }
+
+    private Settings getSettingsWith(boolean enforceEmail, boolean enforceName, boolean allowUsernameAt) {
+        Settings settings = mock(Settings.class);
+        when(settings.getBoolean("allowUsernameAt")).thenReturn(allowUsernameAt);
+        when(settings.getBoolean("enforceEmail")).thenReturn(enforceEmail);
+        when(settings.getBoolean("enforceName")).thenReturn(enforceName);
+        return settings;
     }
 
 }

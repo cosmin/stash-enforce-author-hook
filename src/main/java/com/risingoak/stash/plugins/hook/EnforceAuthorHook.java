@@ -8,12 +8,15 @@ import com.atlassian.stash.hook.repository.PreReceiveRepositoryHook;
 import com.atlassian.stash.hook.repository.RepositoryHookContext;
 import com.atlassian.stash.repository.RefChange;
 import com.atlassian.stash.repository.RefChangeType;
+import com.atlassian.stash.setting.Settings;
 import com.atlassian.stash.user.Person;
 import com.atlassian.stash.user.StashAuthenticationContext;
 import com.atlassian.stash.user.StashUser;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class EnforceAuthorHook implements PreReceiveRepositoryHook {
     private final HistoryService historyService;
@@ -43,7 +46,7 @@ public class EnforceAuthorHook implements PreReceiveRepositoryHook {
             for (String refId : brandNewRevs) {
                 Changeset changeset = historyService.getChangeset(context.getRepository(), refId);
                 Person author = changeset.getAuthor();
-                if (!hasValidAuthor(author, currentUser)) {
+                if (!hasValidAuthor(context.getSettings(), author, currentUser)) {
                     rejectedRevs.put(refId, author);
                 }
             }
@@ -61,8 +64,20 @@ public class EnforceAuthorHook implements PreReceiveRepositoryHook {
         }
     }
 
-    boolean hasValidAuthor(Person author, StashUser currentUser) {
-        return author.getEmailAddress().equalsIgnoreCase(currentUser.getEmailAddress());
+    boolean hasValidAuthor(Settings settings, Person author, StashUser currentUser) {
+        Boolean allowUsernameAt = settings.getBoolean("allowUsernameAt");
+        Boolean enforceEmail = settings.getBoolean("enforceEmail") || true;
+        Boolean enforceName = settings.getBoolean("enforceName");
+
+        boolean valid = true;
+        if (enforceEmail) {
+            valid = valid && author.getEmailAddress().equalsIgnoreCase(currentUser.getEmailAddress());
+        }
+        if (enforceName) {
+            valid = valid && author.getName().equalsIgnoreCase(currentUser.getName());
+        }
+
+        return valid;
     }
 
     List<String> getPushedRefs(Collection<RefChange> refChanges) {
