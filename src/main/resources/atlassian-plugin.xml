@@ -1,10 +1,10 @@
 <atlassian-plugin key="${project.groupId}.${project.artifactId}" name="Enforce Author Hook" plugins-version="2">
     <plugin-info>
-        <description>Do not allow users to push commits they have not authored.</description>
+        <description>Hook to prevent users from pushing commits they have not authored.</description>
         <version>${project.version}</version>
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
-        <param name="plugin-icon">images/pluginIcon.png</param>
-        <param name="plugin-logo">images/pluginLogo.png</param>
+        <param name="plugin-icon">images/enforceAuthorIcon.png</param>
+        <param name="plugin-logo">images/enforceAuthorLogo.png</param>
     </plugin-info>
 
     <!-- add our i18n resource -->
@@ -17,9 +17,9 @@
     <component-import key="stashAuthenticationContext" interface="com.atlassian.stash.user.StashAuthenticationContext" />
 
 
-    <repository-hook key="enforceAuthorship" name="Enforce Push Author" class="com.risingoak.stash.plugins.hook.EnforceAuthorHook">
-        <description>Disables changes to a specified reference (branch or tag) in this repository</description>
-        <!--<icon>icons/example.png</icon>-->
+    <repository-hook key="enforceAuthorHook" name="Enforce Push Author" class="com.risingoak.stash.plugins.hook.EnforceAuthorHook">
+        <description>Prevent users from pushing commits they have not authored.</description>
+        <icon>images/enforceAuthorLogo.png</icon>
         <!--<config-form name="Ref Hook Config" key="refHook-config">-->
             <!--<view>com.atlassian.stash.repository.hook.ref.formContents</view>-->
             <!--<directory location="/static/"/>-->
