@@ -1,0 +1,42 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="Enforce Author Hook" plugins-version="2">
+    <plugin-info>
+        <description>Do not allow users to push commits they have not authored.</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="stash-enforce-author-hook"/>
+
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component-import key="repositoryMetadataService" interface="com.atlassian.stash.repository.RepositoryMetadataService" />
+    <component-import key="gitScm" interface="com.atlassian.stash.scm.git.GitScm" />
+    <component-import key="stashAuthenticationContext" interface="com.atlassian.stash.user.StashAuthenticationContext" />
+
+
+    <repository-hook key="enforceAuthorship" name="Enforce Push Author" class="com.risingoak.stash.plugins.hook.EnforceAuthorHook">
+        <description>Disables changes to a specified reference (branch or tag) in this repository</description>
+        <!--<icon>icons/example.png</icon>-->
+        <!--<config-form name="Ref Hook Config" key="refHook-config">-->
+            <!--<view>com.atlassian.stash.repository.hook.ref.formContents</view>-->
+            <!--<directory location="/static/"/>-->
+        <!--</config-form>-->
+        <!--&lt;!&ndash; Validators can be declared separately &ndash;&gt;-->
+        <!--<validator>com.atlassian.stash.repository.hook.ref.RefValidator</validator>-->
+    </repository-hook>
+
+    <!-- add our web resources -->
+    <web-resource key="stash-enforce-author-hook-resources" name="stash-enforce-author-hook Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="stash-enforce-author-hook.css" location="/css/stash-enforce-author-hook.css"/>
+        <resource type="download" name="stash-enforce-author-hook.js" location="/js/stash-enforce-author-hook.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>stash-enforce-author-hook</context>
+    </web-resource>
+
+</atlassian-plugin>
