@@ -12,8 +12,8 @@
         <url>http://www.risingoak.com/</url>
     </organization>
 
-    <name>Stash Enforce Author Hook</name>
-    <description>Stash hook to prevent users from pushing commits they have not authored</description>
+    <name>Enforce Author Hook for Stash</name>
+    <description>Repository hook for Stash to prevent users from pushing commits they have not authored</description>
     <packaging>atlassian-plugin</packaging>
 
     <scm>

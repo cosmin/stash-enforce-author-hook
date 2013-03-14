@@ -1,4 +1,4 @@
-# Stash Enforce Author Hook
+# Enforce Author Hook for Stash
 
 Enforce that users can only push commits that they have authored. This
 might be required to satisfy security auditing requirements.
