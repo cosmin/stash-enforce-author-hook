@@ -1,73 +1,13 @@
-# TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+Copyright 2013, Rising Oak LLC.
 
-## Definitions
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-* "License" shall mean the terms and conditions for use, reproduction,
-  and distribution.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-* "Licensor" shall mean the copyright owner that is granting the
-  License.
-
-* "Legal Entity" shall mean the union of the acting entity and all
-  other entities that control, are controlled by, or are under common
-  control with that entity. For the purposes of this definition,
-  "control" means (i) the power, direct or indirect, to cause the
-  direction or management of such entity, whether by contract or
-  otherwise, or (ii) ownership of fifty percent (50%) or more of the
-  outstanding shares, or (iii) beneficial ownership of such entity.
-
-* "You" (or "Your") shall mean an individual or Legal Entity
-  exercising permissions granted by this License.
-
-## License Grant
-
-Licensor hereby grants You a non-assignable, non-transferable,
-commercial, royalty free, without the rights to create derivative
-works, non-exclusive license, all with accordance with the terms set
-forth and other legal restrictions set forth in 3rd party software
-used while running Software.  3. Support. Software is provided under
-an AS-IS basis and without any support, updates or
-maintenance. Nothing in this Agreement shall require Licensor to
-provide You with support or fixes to any bug, failure, mis-performance
-or other defect in the Software.
-
-## Trademarks
-
-This License does not grant permission to use the trade names,
-trademarks, service marks, or product names of the Licensor, except as
-required for reasonable and customary use in describing the origin of
-the Software
-
-## Disclaimer of Warranty
-
-Unless required by applicable law or agreed to in writing, Licensor
-provides the Software on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied, including, without
-limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT,
-MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely
-responsible for determining the appropriateness of using the Software
-and assume any risks associated with Your exercise of permissions
-under this License.
-
-## Limitation of Liability
-
-In no event and under no legal theory, whether in tort (including
-negligence), contract, or otherwise, unless required by applicable law
-or agreed to in writing, shall Licensor be liable to You for damages,
-including any direct, indirect, special, incidental, or consequential
-damages of any character arising as a result of this License or out of
-the use or inability to use the Software (including but not limited to
-damages for loss of goodwill, work stoppage, computer failure or
-malfunction, or any and all other commercial damages or losses), even
-if Licensor has been advised of the possibility of such damages.
-
-## Severability
-
-If any provision of this License is invalid or unenforceable under
-applicable law, it shall not affect the validity or enforceability of
-the remainder of the terms of this License
-
-## Governing Law
-
-This License is governed by the laws of the State of Texas and the
-intellectual property laws of the United States of America.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
