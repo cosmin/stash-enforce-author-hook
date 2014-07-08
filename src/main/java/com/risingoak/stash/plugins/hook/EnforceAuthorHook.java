@@ -1,8 +1,8 @@
 package com.risingoak.stash.plugins.hook;
 
 
+import com.atlassian.stash.commit.CommitService;
 import com.atlassian.stash.content.Changeset;
-import com.atlassian.stash.history.HistoryService;
 import com.atlassian.stash.hook.HookResponse;
 import com.atlassian.stash.hook.repository.PreReceiveRepositoryHook;
 import com.atlassian.stash.hook.repository.RepositoryHookContext;
@@ -17,17 +17,15 @@ import com.risingoak.stash.plugins.hook.internal.SettingsWrapper;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
 public class EnforceAuthorHook implements PreReceiveRepositoryHook {
-    private final HistoryService historyService;
+    private final CommitService commitService;
     private final StashAuthenticationContext stashAuthenticationContext;
     private final RejectedResponsePrinter rejectedResponsePrinter;
     private final RefService refService;
     private final RevListService revListService;
 
-    public EnforceAuthorHook(HistoryService historyService, StashAuthenticationContext stashAuthenticationContext, RejectedResponsePrinter rejectedResponsePrinter, RefService refService, RevListService revListService) {
-        this.historyService = historyService;
+    public EnforceAuthorHook(CommitService commitService, StashAuthenticationContext stashAuthenticationContext, RejectedResponsePrinter rejectedResponsePrinter, RefService refService, RevListService revListService) {
+        this.commitService = commitService;
         this.stashAuthenticationContext = stashAuthenticationContext;
         this.rejectedResponsePrinter = rejectedResponsePrinter;
         this.refService = refService;
@@ -45,7 +43,7 @@ public class EnforceAuthorHook implements PreReceiveRepositoryHook {
             List<String> brandNewRevs = revListService.revList(context.getRepository(), pushedRefs, ignoreRefs);
 
             for (String refId : brandNewRevs) {
-                Changeset changeset = historyService.getChangeset(context.getRepository(), refId);
+                Changeset changeset = commitService.getChangeset(context.getRepository(), refId);
                 Person author = changeset.getAuthor();
                 if (!hasValidAuthor(context.getSettings(), author, currentUser)) {
                     rejectedRevs.put(refId, author);

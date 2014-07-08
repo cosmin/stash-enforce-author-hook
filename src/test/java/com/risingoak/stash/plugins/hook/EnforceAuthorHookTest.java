@@ -1,6 +1,6 @@
 package com.risingoak.stash.plugins.hook;
 
-import com.atlassian.stash.history.HistoryService;
+import com.atlassian.stash.commit.CommitService;
 import com.atlassian.stash.hook.HookResponse;
 import com.atlassian.stash.repository.RefChange;
 import com.atlassian.stash.repository.RefChangeType;
@@ -23,9 +23,11 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+
 @RunWith(MockitoJUnitRunner.class)
 public class EnforceAuthorHookTest extends BaseGitScmTest {
-    @Mock HistoryService historyService;
+    @Mock
+    CommitService commitService;
     @Mock StashAuthenticationContext stashAuthenticationContext;
     @Mock RefService refService;
     @Mock RevListService revListService;
@@ -39,7 +41,7 @@ public class EnforceAuthorHookTest extends BaseGitScmTest {
     @Before
     public void setUp() throws Exception {
         when(stashAuthenticationContext.getCurrentUser()).thenReturn(stashUser);
-        hook = new EnforceAuthorHook(historyService, stashAuthenticationContext, rejectedResponsePrinter, refService, revListService);
+        hook = new EnforceAuthorHook(commitService, stashAuthenticationContext, rejectedResponsePrinter, refService, revListService);
     }
 
     @Test
